@@ -1,0 +1,40 @@
+- type: job
+  id: RedSapper
+  name: job-name-red-sapper
+  description: job-description-red-sapper
+  playTimeTracker: JobRedSapper
+  requirements:
+    - !type:OverallPlaytimeRequirement
+      time: 3h
+  startingGear: RedSapperGear
+  icon: "JobIconStationEngineer"
+  supervisors: job-supervisors-squad-leader
+  canBeAntag: false
+
+- type: startingGear
+  id: RedSapperGear
+  equipment:
+    head: RedSapperHardHat
+    mask: ClothingMaskBandMerc
+    neck: ClothingNeckTieRed
+    outerClothing: ClothingOuterVestWebMerc
+    jumpsuit: ClothingUniformJumpsuitMercenary
+    gloves: ClothingHandsMercGlovesCombat
+    id: SquadDogtagRed
+    shoes: ClothingShoesBootsMerc
+    belt: ClothingBeltUtilityEngineering
+    back: ClothingBackpackDuffelMilitary
+    pocket1: RadioHandheldSecurity
+    suitstorage: WeaponRifleAk
+  storage:
+    back:
+    - BoxMRE
+    - Gauze
+    - MagazineLightRifle
+    - MagazineLightRifle
+    - CombatKnife
+    - SquadSapperSpade
+    - SheetSteel
+    - SheetGlass
+    - SheetPlastic
+    - PartRodMetal

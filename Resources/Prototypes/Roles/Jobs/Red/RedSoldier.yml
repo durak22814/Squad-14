@@ -1,0 +1,33 @@
+- type: job
+  id: RedSoldier
+  name: job-name-red-soldier
+  description: job-description-red-soldier
+  playTimeTracker: JobRedSoldier
+  startingGear: RedSoldierGear
+  icon: "JobIconSecurityOfficer"
+  supervisors: job-supervisors-squad-leader
+  canBeAntag: false
+
+- type: startingGear
+  id: RedSoldierGear
+  equipment:
+    head: ClothingHeadHelmetMerc
+    mask: ClothingMaskBandMerc
+    neck: ClothingNeckTieRed
+    outerClothing: ClothingOuterVestWebMerc
+    jumpsuit: ClothingUniformJumpsuitMercenary
+    gloves: ClothingHandsMercGlovesCombat
+    id: SquadDogtagRed
+    shoes: ClothingShoesBootsMerc
+    belt: ClothingBeltMercWebbing
+    back: ClothingBackpackMerc
+    pocket1: RadioHandheldSecurity
+    suitstorage: WeaponRifleAk
+  storage:
+    belt:
+    - MagazineLightRifle
+    - MagazineLightRifle
+    - CombatKnife
+    back:
+    - BoxMRE
+    - Gauze

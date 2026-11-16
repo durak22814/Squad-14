@@ -1,0 +1,39 @@
+- type: job
+  id: BlueSapper
+  name: job-name-blue-sapper
+  description: job-description-blue-sapper
+  playTimeTracker: JobBlueSapper
+  requirements:
+    - !type:OverallPlaytimeRequirement
+      time: 3h
+  startingGear: BlueSoldierGear
+  icon: "JobIconChiefEngineer"
+  supervisors: job-supervisors-squad-leader
+  canBeAntag: false
+
+- type: startingGear
+  id: BlueSapperGear
+  equipment:
+    head: BlueSapperHardHat
+    neck: ClothingNeckTieSci
+    outerClothing: ClothingOuterArmorBasic
+    jumpsuit: ClothingUniformJumpsuitMercenary
+    gloves: ClothingHandsMercGlovesCombat
+    id: SquadDogtagBlue
+    shoes: ClothingShoesBootsMerc
+    belt: ClothingBeltUtilityEngineering
+    back: ClothingBackpackDuffelMilitary
+    pocket1: RadioHandheld
+    suitstorage: WeaponRifleAk
+  storage:
+    back:
+    - BoxMRE
+    - Gauze
+    - MagazineLightRifle
+    - MagazineLightRifle
+    - CombatKnife
+    - SquadSapperSpade
+    - SheetSteel
+    - SheetGlass
+    - SheetPlastic
+    - PartRodMetal

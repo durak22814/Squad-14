@@ -1,0 +1,30 @@
+- type: job
+  id: BlueMedic
+  name: job-name-blue-Medic
+  description: job-description-blue-Medic
+  playTimeTracker: JobBlueMedic
+  requirements:
+    - !type:OverallPlaytimeRequirement
+      time: 5h
+  startingGear: BlueMedicGear
+  icon: "JobIconChiefMedicalOfficer"
+  supervisors: job-supervisors-squad-leader
+  canBeAntag: false
+
+- type: startingGear
+  id: BlueMedicGear
+  equipment:
+    head: ClothingHeadHelmetMerc
+    ears: SquadHeadsetRed
+    neck: ClothingNeckTieSci
+    outerClothing: ClothingOuterArmorBasic
+    jumpsuit: ClothingUniformJumpsuitMercenary
+    gloves: ClothingHandsGlovesColorWhite
+    id: SquadDogtagBlue
+    shoes: ClothingShoesBootsMerc
+    belt: ClothingBeltSquadMedicFilled
+    back: ClothingBackpackMerc
+    suitstorage: WeaponRifleAk
+  storage:
+    back:
+    - BoxMRE

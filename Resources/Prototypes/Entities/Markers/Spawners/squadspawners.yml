@@ -1,0 +1,121 @@
+- type: entity
+  id: SpawnPointRedSoldier
+  parent: SpawnPointJobBase
+  name: redsoldier
+  components:
+  - type: SpawnPoint
+    job_id: RedSoldier
+  - type: Sprite
+    sprite: Markers/jobs.rsi
+    state: security_officer
+    layers:
+      - state: green
+      - state: security_officer
+
+- type: entity
+  id: SpawnPointBlueSoldier
+  parent: SpawnPointJobBase
+  name: bluesoldier
+  components:
+  - type: SpawnPoint
+    job_id: BlueSoldier
+  - type: Sprite
+    layers:
+      - state: green
+      - state: security_officer
+
+- type: entity
+  id: SpawnPointRedSquadLeader
+  parent: SpawnPointJobBase
+  name: redsquadleader
+  components:
+  - type: SpawnPoint
+    job_id: RedSquadLeader
+  - type: Sprite
+    layers:
+      - state: green
+      - state: warden
+
+- type: entity
+  id: SpawnPointBlueSquadLeader
+  parent: SpawnPointJobBase
+  name: bluesquadleader
+  components:
+  - type: SpawnPoint
+    job_id: BlueSquadLeader
+  - type: Sprite
+    layers:
+      - state: green
+      - state: warden
+
+- type: entity
+  id: SpawnPointRedSapper
+  parent: SpawnPointJobBase
+  name: redsapper
+  components:
+  - type: SpawnPoint
+    job_id: RedSapper
+  - type: Sprite
+    layers:
+      - state: green
+      - state: engineer
+
+- type: entity
+  id: SpawnPointBlueSapper
+  parent: SpawnPointJobBase
+  name: bluesapper
+  components:
+  - type: SpawnPoint
+    job_id: BlueSapper
+  - type: Sprite
+    layers:
+      - state: green
+      - state: engineer
+
+- type: entity
+  id: SpawnPointRedTeamLeader
+  parent: SpawnPointJobBase
+  name: redteamleader
+  components:
+  - type: SpawnPoint
+    job_id: RedTeamLeader
+  - type: Sprite
+    layers:
+      - state: green
+      - state: hos
+
+- type: entity
+  id: SpawnPointBlueTeamLeader
+  parent: SpawnPointJobBase
+  name: blueteamleader
+  components:
+  - type: SpawnPoint
+    job_id: BlueTeamLeader
+  - type: Sprite
+    layers:
+      - state: green
+      - state: hos
+
+- type: entity
+  id: SpawnPointRedMedic
+  parent: SpawnPointJobBase
+  name: redmedic
+  components:
+  - type: SpawnPoint
+    job_id: RedMedic
+  - type: Sprite
+    layers:
+      - state: green
+      - state: brigmedic
+
+- type: entity
+  id: SpawnPointBlueMedic
+  parent: SpawnPointJobBase
+  name: bluemedic
+  components:
+  - type: SpawnPoint
+    job_id: BlueMedic
+  - type: Sprite
+    layers:
+      - state: green
+      - state: brigmedic

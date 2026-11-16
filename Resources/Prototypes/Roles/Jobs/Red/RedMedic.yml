@@ -1,0 +1,32 @@
+- type: job
+  id: RedMedic
+  name: job-name-red-Medic
+  description: job-description-red-Medic
+  playTimeTracker: JobRedMedic
+  requirements:
+    - !type:OverallPlaytimeRequirement
+      time: 5h
+  startingGear: RedMedicGear
+  icon: "JobIconBrigmedic"
+  supervisors: job-supervisors-squad-leader
+  weight: 2
+  canBeAntag: false
+
+- type: startingGear
+  id: RedMedicGear
+  equipment:
+    head: ClothingHeadHelmetMerc
+    ears: SquadHeadsetRed
+    mask: ClothingMaskBandMerc
+    neck: ClothingNeckTieRed
+    outerClothing: ClothingOuterVestWebMerc
+    jumpsuit: ClothingUniformJumpsuitMercenary
+    gloves: ClothingHandsGlovesColorWhite
+    id: SquadDogtagRed
+    shoes: ClothingShoesBootsMerc
+    belt: ClothingBeltSquadSoldierFilled
+    back: ClothingBackpackMerc
+    suitstorage: WeaponRifleAk
+  storage:
+    back:
+    - BoxMRE

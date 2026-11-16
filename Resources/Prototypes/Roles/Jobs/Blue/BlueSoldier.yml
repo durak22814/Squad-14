@@ -1,0 +1,28 @@
+- type: job
+  id: BlueSoldier
+  name: job-name-blue-soldier
+  description: job-description-blue-soldier
+  playTimeTracker: JobBlueSoldier
+  startingGear: BlueSoldierGear
+  icon: "JobIconHeadOfSecurity"
+  supervisors: job-supervisors-squad-leader
+  canBeAntag: false
+
+- type: startingGear
+  id: BlueSoldierGear
+  equipment:
+    head: ClothingHeadHelmetMerc
+    neck: ClothingNeckTieSci
+    outerClothing: ClothingOuterArmorBasic
+    jumpsuit: ClothingUniformJumpsuitMercenary
+    gloves: ClothingHandsMercGlovesCombat
+    id: SquadDogtagBlue
+    shoes: ClothingShoesBootsMerc
+    belt: ClothingBeltSquadSoldierFilled
+    back: ClothingBackpackMerc
+    pocket1: RadioHandheld
+    suitstorage: WeaponRifleAk
+  storage:
+    back:
+    - BoxMRE
+    - Gauze

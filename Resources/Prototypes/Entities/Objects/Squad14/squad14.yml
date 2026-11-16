@@ -1,0 +1,656 @@
+- type: entity
+  parent: HydroponicsToolSpade
+  id: SquadSapperSpade
+
+- type: entity
+  parent: MobCleanBot
+  id: SquadFpvDrone
+  components:
+  - type: Sprite
+    sprite: Mobs/Silicon/drone.rsi
+    state: shell
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 5.5
+    baseSprintSpeed: 8.5
+  - type: PointLight
+    radius: 3.5
+    energy: 2.0
+    color: "#FF3333"
+  - type: FootstepModifier
+    footstepSoundCollection:
+      path: /Audio/Effects/fpv.ogg
+  - type: ContainerContainer
+    containers:
+      implant: !type:Container
+  - type: ContainerFill
+    containers:
+      implant:
+      - MicroBombImplant
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 15
+      behaviors:
+      - !type:ExplodeBehavior
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: Explosive
+    explosionType: Default
+    maxIntensity: 4
+    intensitySlope: 3
+    totalIntensity: 35
+    canCreateVacuum: false
+
+- type: entity
+  parent: [ClothingOuterCoatHoSTrench, AllowSuitStorageClothing]
+  id: SquadLeaderRedCoat
+  components:
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.5
+        Heat: 0.9
+  - type: ExplosionResistance
+    damageCoefficient: 0.9
+
+- type: entity
+  parent: [ClothingOuterCoatWarden, AllowSuitStorageClothing]
+  id: SquadLeaderBlueCoat
+  components:
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.5
+        Heat: 0.9
+  - type: ExplosionResistance
+    damageCoefficient: 0.9
+
+- type: entity
+  parent: ClothingHeadHatBeretSecurityMedic
+  id: SquadLeaderRedHat
+  components:
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+
+- type: entity
+  parent: ClothingHeadHatBeretSecurity
+  id: SquadLeaderBlueHat
+  components:
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+
+- type: entity
+  parent: ClothingHeadHatBeretSecurity
+  id: TeamLeaderRedHat
+  components:
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+
+- type: entity
+  parent: ClothingHeadHatBeretCmo
+  id: TeamLeaderBlueHat
+  components:
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+
+- type: entity
+  parent: ClothingHeadHatHardhatRed
+  id: RedSapperHardHat
+  components:
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+
+- type: entity
+  parent: ClothingHeadHatHardhatBlue
+  id: BlueSapperHardHat
+  components:
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+
+- type: entity
+  parent: ClothingHeadsetAltSecurity
+  id: SquadHeadsetRed
+  components:
+  - type: TelecomExempt
+  - type: ContainerFill
+    containers:
+      key_slots:
+      - EncryptionKeySecurity
+
+- type: entity
+  parent: ClothingHeadsetAltSecurity
+  id: SquadHeadsetRedCommand
+  components:
+  - type: TelecomExempt
+  - type: ContainerFill
+    containers:
+      key_slots:
+      - EncryptionKeySecurity
+      - EncryptionKeySyndie
+
+- type: entity
+  parent: ClothingHeadsetAltCommand
+  id: SquadHeadsetBlue
+  components:
+  - type: TelecomExempt
+  - type: IntrinsicRadioReceiver
+  - type: IntrinsicRadioTransmitter
+    channels:
+    - Medical
+  - type: ActiveRadio
+    channels:
+    - Medical
+  - type: ContainerFill
+    containers:
+      key_slots: []
+
+- type: entity
+  parent: ClothingHeadsetAltCommand
+  id: SquadHeadsetBlueCommand
+  components:
+  - type: TelecomExempt
+  - type: IntrinsicRadioReceiver
+  - type: IntrinsicRadioTransmitter
+    channels:
+    - Medical
+    - Command
+  - type: ActiveRadio
+    channels:
+    - Medical
+    - Command
+  - type: ContainerFill
+    containers:
+      key_slots:
+      - EncryptionKeyMedical
+      - EncryptionKeyCommand
+
+- type: entity
+  parent: HealingToolbox
+  id: SquadCombatMedkit
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Medical/firstaidkits.rsi
+    state: blackkit
+  - type: Item
+    sprite: Objects/Specific/Medical/firstaidkits.rsi
+    heldPrefix: blackkit
+    size: Normal
+
+- type: entity
+  parent: IDCardStandard
+  id: SquadDogtagRed
+  components:
+  - type: Sprite
+    sprite: _Goobstation/Objects/Devices/makeshift_id.rsi
+    layers:
+    - state: unfinished
+      color: "#E08080"
+  - type: Currency
+    price:
+      SquadSupplyBlue: 5
+
+- type: entity
+  parent: IDCardStandard
+  id: SquadDogtagBlue
+  components:
+  - type: Sprite
+    sprite: _Goobstation/Objects/Devices/makeshift_id.rsi
+    layers:
+    - state: unfinished
+      color: "#80A8E0"
+  - type: Currency
+    price:
+      SquadSupplyRed: 5
+
+- type: currency
+  id: SquadSupplyRed
+  name: squad-red-currency-name
+  description: squad-red-currency-description
+  displayName: squad-red-currency-display-name
+  canWithdraw: false
+
+- type: currency
+  id: SquadSupplyBlue
+  name: squad-blue-currency-name
+  description: squad-blue-currency-description
+  displayName: squad-blue-currency-display-name
+  canWithdraw: false
+
+- type: entity
+  parent: BaseComputer
+  id: SquadSupplyConsoleRed
+  name: squad-red-console-name
+  description: squad-red-console-description
+  components:
+  - type: Sprite
+    layers:
+    - map: ["computerLayerBody"]
+      state: computer
+    - map: ["computerLayerKeyboard"]
+      state: generic_keyboard
+    - map: ["computerLayerScreen"]
+      state: request-sec
+    - map: ["computerLayerKeys"]
+      state: generic_keys
+    - map: ["enum.WiresVisualLayers.MaintenancePanel"]
+      state: generic_panel_open
+  - type: ApcPowerReceiver
+    needsPower: false
+  - type: ComputerVisuals
+    stateScreen: request-sec
+  - type: PointLight
+    color: "#d11d00"
+  - type: ActivatableUI
+    key: enum.StoreUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.StoreUiKey.Key:
+        type: StoreBoundUserInterface
+  - type: Store
+    categories:
+    - SquadSuppliesRed
+    currencyWhitelist:
+    - SquadSupplyRed
+    balance:
+      SquadSupplyRed: 20
+
+- type: entity
+  parent: BaseComputer
+  id: SquadSupplyConsoleBlue
+  components:
+  - type: Sprite
+    layers:
+    - map: ["computerLayerBody"]
+      state: computer
+    - map: ["computerLayerKeyboard"]
+      state: generic_keyboard
+    - map: ["computerLayerScreen"]
+      state: request-med
+    - map: ["computerLayerKeys"]
+      state: generic_keys
+    - map: ["enum.WiresVisualLayers.MaintenancePanel"]
+      state: generic_panel_open
+  - type: ApcPowerReceiver
+    needsPower: false
+  - type: ComputerVisuals
+    stateScreen: request-med
+  - type: PointLight
+    color: "#2b65ec"
+  - type: ActivatableUI
+    key: enum.StoreUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.StoreUiKey.Key:
+        type: StoreBoundUserInterface
+  - type: Store
+    categories:
+    - SquadSuppliesBlue
+    currencyWhitelist:
+    - SquadSupplyBlue
+    balance:
+      SquadSupplyBlue: 20
+
+- type: storeCategory
+  id: SquadSuppliesRed
+  name: squad-category-red-name
+
+- type: storeCategory
+  id: SquadSuppliesBlue
+  name: squad-category-blue-name
+
+- type: entity
+  parent: CrateWooden
+  id: CrateSquadAmmo
+  name: squad-crate-ammo-name
+  description: squad-crate-ammo-description
+  components:
+  - type: StorageFill
+    contents:
+    - id: MagazineLightRifle
+      amount: 3
+
+- type: entity
+  parent: CrateMedical
+  id: CrateSquadBandages
+  name: squad-crate-bandage-name
+  description: squad-crate-bandage-description
+  components:
+  - type: StorageFill
+    contents:
+    - id: Gauze
+      amount: 3
+
+- type: entity
+  parent: CrateMedical
+  id: CrateSquadMedkits
+  name: squad-crate-medkit-name
+  description: squad-crate-medkit-description
+  components:
+  - type: StorageFill
+    contents:
+    - id: SquadCombatMedkit
+      amount: 3
+
+- type: entity
+  parent: CrateMedical
+  id: CrateSquadBloodpacks
+  name: squad-crate-blood-name
+  description: squad-crate-blood-description
+  components:
+  - type: StorageFill
+    contents:
+    - id: Bloodpack
+      amount: 3
+
+- type: entity
+  parent: CrateMedical
+  id: CrateSquadMedipens
+  name: squad-crate-medipen-name
+  description: squad-crate-medipen-description
+  components:
+  - type: StorageFill
+    contents:
+    - id: EmergencyMedipen
+      amount: 3
+
+- type: entity
+  parent: CrateEngineering
+  id: CrateSquadResources
+  name: squad-crate-resources-name
+  description: squad-crate-resources-description
+  components:
+  - type: StorageFill
+    contents:
+    - id: SheetSteel
+    - id: SheetGlass
+    - id: SheetPlastic
+
+- type: listing
+  id: ListingSquadAmmoBoxRed
+  name: squad-listing-ammo-name
+  description: squad-listing-ammo-description
+  productEntity: CrateSquadAmmo
+  cost:
+    SquadSupplyRed: 12
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadBandageBoxRed
+  name: squad-listing-bandage-name
+  description: squad-listing-bandage-description
+  productEntity: CrateSquadBandages
+  cost:
+    SquadSupplyRed: 10
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadMedkitBoxRed
+  name: squad-listing-medkit-name
+  description: squad-listing-medkit-description
+  productEntity: CrateSquadMedkits
+  cost:
+    SquadSupplyRed: 25
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadBloodBoxRed
+  name: squad-listing-blood-name
+  description: squad-listing-blood-description
+  productEntity: CrateSquadBloodpacks
+  cost:
+    SquadSupplyRed: 15
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadMedipenBoxRed
+  name: squad-listing-medipen-name
+  description: squad-listing-medipen-description
+  productEntity: CrateSquadMedipens
+  cost:
+    SquadSupplyRed: 15
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadResourcesBoxRed
+  name: squad-listing-resources-name
+  description: squad-listing-resources-description
+  productEntity: CrateSquadResources
+  cost:
+    SquadSupplyRed: 18
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadAmmoBoxBlue
+  name: squad-listing-ammo-name
+  description: squad-listing-ammo-description
+  productEntity: CrateSquadAmmo
+  cost:
+    SquadSupplyBlue: 12
+  categories:
+    - SquadSuppliesBlue
+
+- type: listing
+  id: ListingSquadBandageBoxBlue
+  name: squad-listing-bandage-name
+  description: squad-listing-bandage-description
+  productEntity: CrateSquadBandages
+  cost:
+    SquadSupplyBlue: 10
+  categories:
+    - SquadSuppliesBlue
+
+- type: listing
+  id: ListingSquadMedkitBoxBlue
+  name: squad-listing-medkit-name
+  description: squad-listing-medkit-description
+  productEntity: CrateSquadMedkits
+  cost:
+    SquadSupplyBlue: 25
+  categories:
+    - SquadSuppliesBlue
+
+- type: listing
+  id: ListingSquadBloodBoxBlue
+  name: squad-listing-blood-name
+  description: squad-listing-blood-description
+  productEntity: CrateSquadBloodpacks
+  cost:
+    SquadSupplyBlue: 15
+  categories:
+    - SquadSuppliesBlue
+
+- type: listing
+  id: ListingSquadMedipenBoxBlue
+  name: squad-listing-medipen-name
+  description: squad-listing-medipen-description
+  productEntity: CrateSquadMedipens
+  cost:
+    SquadSupplyBlue: 15
+  categories:
+    - SquadSuppliesBlue
+
+- type: listing
+  id: ListingSquadResourcesBoxBlue
+  name: squad-listing-resources-name
+  description: squad-listing-resources-description
+  productEntity: CrateSquadResources
+  cost:
+    SquadSupplyBlue: 18
+  categories:
+    - SquadSuppliesBlue
+
+- type: entity
+  parent: ClothingBeltMercWebbing
+  id: ClothingBeltSquadMedicFilled
+  components:
+  - type: StorageFill
+    contents:
+    - id: CombatKnife
+    - id: Gauze
+    - id: SquadCombatMedkit
+    - id: EmergencyMedipen
+      amount: 2
+    - id: Bloodpack
+
+- type: entity
+  parent: ClothingBeltMercWebbing
+  id: ClothingBeltSquadSoldierFilled
+  components:
+  - type: StorageFill
+    contents:
+    - id: MagazineLightRifle
+      amount: 2
+    - id: CombatKnife
+
+- type: entity
+  parent: ClothingBeltMercWebbing
+  id: ClothingBeltSquadLeaderFilled
+  components:
+  - type: StorageFill
+    contents:
+    - id: MagazineLightRifle
+      amount: 3
+    - id: CombatKnife
+
+- type: entity
+  parent: ClothingBeltMercWebbing
+  id: ClothingBeltSquadTeamLeaderFilled
+  components:
+  - type: StorageFill
+    contents:
+    - id: MagazineLightRifle
+      amount: 2
+    - id: CombatKnife
+
+- type: entity
+  id: SquadSupplyTruckBase
+  abstract: true
+  save: false
+  components:
+  - type: Sprite
+    sprite: _RMC14/Structures/Vehicles/vehicles2.rsi
+    state: truck_cargo
+    noRot: true
+  - type: Appearance
+  - type: AmbientSound
+    sound: "/Audio/Effects/Vehicle/vehicleengineidle.ogg"
+    range: 10
+    volume: -10
+    enabled: false
+  - type: InputMover
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Physics
+    bodyType: Dynamic
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.65
+        density: 150
+        mask:
+          - MobMask
+          - HighImpassable
+          - MidImpassable
+          - LowImpassable
+        layer:
+          - MobLayer
+          - MidImpassable
+        hard: true
+  - type: MovementSpeedModifier
+    baseAcceleration: 8
+    baseFriction: 0.25
+    baseSprintSpeed: 8.5
+    baseWalkSpeed: 4.5
+  - type: SquadTruck
+    maxCargoUnits: 6
+    maxPassengers: 4
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Metallic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 250
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Breakage"]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+    - trigger:
+        !type:DamageTrigger
+        damage: 500
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: Tag
+    tags:
+    - DoorBumpOpener
+  - type: RequireProjectileTarget
+
+- type: entity
+  parent: SquadSupplyTruckBase
+  id: SquadSupplyTruckRed
+  components:
+  - type: Sprite
+    sprite: _RMC14/Structures/Vehicles/vehicles2.rsi
+    state: truck_cargo
+    color: "#E88080"
+    noRot: true
+
+- type: entity
+  parent: SquadSupplyTruckBase
+  id: SquadSupplyTruckBlue
+  components:
+  - type: Sprite
+    sprite: _RMC14/Structures/Vehicles/vehicles2.rsi
+    state: truck_cargo
+    color: "#80A8E8"
+    noRot: true

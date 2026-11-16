@@ -307,3 +307,29 @@
   - Zookeeper
   - Psychologist
   primary: false
+
+- type: department
+  id: Red
+  name: department-Red
+  description: department-Red-description
+  color: "#B22222"
+  weight: 300
+  roles:
+  - RedSoldier
+  - RedSapper
+  - RedMedic
+  - RedSquadLeader
+  - RedTeamLeader
+
+- type: department
+  id: Blue
+  name: department-Blue
+  description: department-Blue-description
+  color: "#1E90FF"
+  weight: 300
+  roles:
+  - BlueSoldier
+  - BlueSapper
+  - BlueMedic
+  - BlueSquadLeader
+  - BlueTeamLeader

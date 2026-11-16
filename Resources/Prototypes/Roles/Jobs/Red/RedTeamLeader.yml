@@ -1,0 +1,32 @@
+- type: job
+  id: RedTeamLeader
+  name: job-name-red-team-leader
+  description: job-description-red-team-leader
+  playTimeTracker: JobRedTeamLeader
+  requirements:
+      - !type:OverallPlaytimeRequirement
+       time: 100h
+  startingGear: RedTeamLeaderGear
+  icon: "JobIconSecurityOfficer"
+  supervisors: job-supervisors-squad-leader
+  canBeAntag: false
+
+- type: startingGear
+  id: RedTeamLeaderGear
+  equipment:
+    head: TeamLeaderRedHat
+    ears: SquadHeadsetRedCommand
+    mask: ClothingMaskBandMerc
+    neck: ClothingNeckTieRed
+    outerClothing: SquadLeaderRedCoat
+    jumpsuit: ClothingUniformJumpsuitMercenary
+    gloves: ClothingHandsMercGlovesCombat
+    id: SquadDogtagRed
+    shoes: ClothingShoesBootsMerc
+    belt: ClothingBeltSquadTeamLeaderFilled
+    back: ClothingBackpackMerc
+    suitstorage: WeaponRifleAk
+  storage:
+    back:
+    - BoxMRE
+    - Gauze

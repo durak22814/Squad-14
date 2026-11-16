@@ -1,0 +1,28 @@
+- type: job
+  id: BlueTeamLeader
+  name: job-name-blue-team-leader
+  description: job-description-blue-team-leader
+  playTimeTracker: JobBlueTeamLeader
+  startingGear: BlueTeamLeaderGear
+  icon: "JobIconHeadOfSecurity"
+  supervisors: job-supervisors-team-leader
+  canBeAntag: false
+
+- type: startingGear
+  id: BlueTeamLeaderGear
+  equipment:
+    head: SquadLeaderBlueHat
+    ears: SquadHeadsetBlueCommand
+    neck: ClothingNeckTieSci
+    outerClothing: SquadLeaderBlueCoat
+    jumpsuit: ClothingUniformJumpsuitMercenary
+    gloves: ClothingHandsMercGlovesCombat
+    id: SquadDogtagBlue
+    shoes: ClothingShoesBootsMerc
+    belt: ClothingBeltSquadTeamLeaderFilled
+    back: ClothingBackpackMerc
+    suitstorage: WeaponRifleAk
+  storage:
+    back:
+    - BoxMRE
+    - Gauze

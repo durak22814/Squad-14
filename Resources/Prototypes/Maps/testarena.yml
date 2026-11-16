@@ -1,0 +1,27 @@
+- type: gameMap
+  id: testarena
+  mapName: 'Test Arena'
+  mapPath: /Maps/testarena.yml
+  minPlayers: 0
+  stations:
+    TestArena:
+      stationProto: StandardNanotrasenStation
+      components:
+        - type: StationNameSetup
+          mapNameTemplate: 'testarena'
+        - type: StationBiome
+          biome: Grasslands
+          seed: 42
+          mapLightColor: '#D8B059FF'
+        - type: StationJobs
+          availableJobs:
+            RedSoldier: [ -1, -1 ]
+            RedSapper: [ 2, 3 ]
+            RedMedic: [ 2, 3 ]
+            RedSquadLeader: [ 2, 2 ]
+            RedTeamLeader: [ 1, 1 ]
+            BlueSoldier: [ -1, -1 ]
+            BlueSapper: [ 2, 3 ]
+            BlueMedic: [ 2, 3 ]
+            BlueSquadLeader: [ 2, 2 ]
+            BlueTeamLeader: [ 1, 1 ]

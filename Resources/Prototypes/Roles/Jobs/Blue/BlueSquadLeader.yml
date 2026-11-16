@@ -1,0 +1,31 @@
+- type: job
+  id: BlueSquadLeader
+  name: job-name-blue-squad-leader
+  description: job-description-blue-squad-leader
+  playTimeTracker: JobBlueSquadLeader
+  requirements:
+      - !type:OverallPlaytimeRequirement
+       time: 20h
+  startingGear: BlueSquadLeader
+  icon: "JobIconSeniorPhysician"
+  supervisors: job-supervisors-team-leader
+  canBeAntag: false
+
+- type: startingGear
+  id: BlueSquadLeaderGear
+  equipment:
+    head: SquadLeaderBlueHat
+    ears: SquadHeadsetBlueCommand
+    neck: ClothingNeckTieSci
+    outerClothing: ClothingOuterArmorBasic
+    jumpsuit: ClothingUniformJumpsuitMercenary
+    gloves: ClothingHandsMercGlovesCombat
+    id: SquadDogtagBlue
+    shoes: ClothingShoesBootsMerc
+    belt: ClothingBeltSquadLeaderFilled
+    back: ClothingBackpackMerc
+    suitstorage: WeaponRifleAk
+  storage:
+    back:
+    - BoxMRE
+    - Gauze
