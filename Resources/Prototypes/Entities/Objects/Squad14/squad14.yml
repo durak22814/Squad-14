@@ -3,58 +3,108 @@
   id: SquadSapperSpade
 
 - type: entity
-  parent: MobCleanBot
+  id: SquadFpvController
+  parent: BaseItem
+  name: пульт управления FPV
+  description: Тактический пульт оператора БПЛА. Нажмите Z в руке для подключения к дрону; повторное нажатие Z — подрыв.
+  components:
+  - type: Sprite
+    sprite: Objects/Devices/signaller.rsi
+    state: signaller
+  - type: Item
+    size: Small
+  - type: SquadFpvController
+    linkRadius: 15
+
+- type: entity
+  id: ActionFpvDisconnect
+  name: Отключиться от дрона
+  description: Вернуть управление и камеру обратно оператору.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: InstantAction
+    checkCanInteract: false
+    icon: Interface/Actions/ai-core.png
+    event: !type:FpvDisconnectActionEvent
+
+- type: entity
+  id: ActionFpvDetonate
+  name: Подрыв FPV-заряда
+  description: Мгновенно детонировать боевую часть дрона.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: InstantAction
+    checkCanInteract: false
+    icon: Objects/Weapons/Grenades/grenade.rsi/icon.png
+    event: !type:FpvDetonateActionEvent
+
+- type: entity
   id: SquadFpvDrone
+  name: FPV-дрон камикадзе
+  description: Высокоскоростной ударный квадрокоптер с кумулятивно-осколочным зарядом.
   components:
   - type: Sprite
     sprite: Mobs/Silicon/drone.rsi
     state: shell
+    noRot: true
+  - type: Eye
+    drawFov: true
+  - type: InputMover
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Physics
+    bodyType: Dynamic
+    fixedRotation: true
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.2
+        density: 15
+        mask:
+          - Impassable
+          - HighImpassable
+          - MidImpassable
+          - MobMask
+        layer:
+          - MobLayer
+        hard: true
   - type: MovementSpeedModifier
-    baseWalkSpeed: 5.5
-    baseSprintSpeed: 8.5
+    baseWalkSpeed: 7.5
+    baseSprintSpeed: 12.0
+    baseAcceleration: 15
   - type: PointLight
     radius: 3.5
     energy: 2.0
     color: "#FF3333"
-  - type: FootstepModifier
-    footstepSoundCollection:
+  - type: AmbientSound
+    volume: 2
+    range: 14
+    enabled: false
+    sound:
       path: /Audio/Effects/fpv.ogg
-  - type: ContainerContainer
-    containers:
-      implant: !type:Container
-  - type: ContainerFill
-    containers:
-      implant:
-      - MicroBombImplant
+  - type: SquadFpvDrone
+    maxRange: 65
+    detonateOnCollide: true
+    explosionIntensity: 35
+    explosionSlope: 3
+    explosionMaxIntensity: 4
+  - type: Pullable
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Metallic
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
         damage: 15
       behaviors:
-      - !type:ExplodeBehavior
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-  - type: Explosive
-    explosionType: Default
-    maxIntensity: 4
-    intensitySlope: 3
-    totalIntensity: 35
-    canCreateVacuum: false
-
-- type: entity
-  parent: [ClothingOuterCoatHoSTrench, AllowSuitStorageClothing]
-  id: SquadLeaderRedCoat
-  components:
-  - type: Armor
-    modifiers:
-      coefficients:
-        Blunt: 0.7
-        Slash: 0.7
-        Piercing: 0.5
-        Heat: 0.9
-  - type: ExplosionResistance
-    damageCoefficient: 0.9
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
 
 - type: entity
   parent: [ClothingOuterCoatWarden, AllowSuitStorageClothing]
@@ -654,3 +704,149 @@
     state: truck_cargo
     color: "#80A8E8"
     noRot: true
+
+- type: entity
+  id: SquadFrontlineRule
+  parent: BaseGameRule
+  components:
+  - type: SquadFrontlineRule
+
+- type: entity
+  id: SquadCapturePointBase
+  parent: BaseStructure
+  name: контрольный узел
+  description: Тактический генератор поля. Удерживайте позицию рядом с ним для захвата сектора.
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: Structures/Machines/gravity_generator_mini.rsi
+    layers:
+    - state: off
+    - state: on
+      shader: unshaded
+  - type: PointLight
+    radius: 5
+    energy: 2.0
+    color: "#FFFFFF"
+  - type: SquadCapturePoint
+    captureRadius: 4.5
+    captureSpeedPerPlayer: 10
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.4,-0.4,0.4,0.4"
+        density: 1000
+        mask:
+          - MachineMask
+        layer:
+          - MachineLayer
+
+
+- type: entity
+  parent: SquadCapturePointBase
+  id: SquadCapturePointAlpha
+  name: Точка Альфа
+  components:
+  - type: SquadCapturePoint
+    pointName: "Точка Альфа"
+
+- type: entity
+  parent: SquadCapturePointBase
+  id: SquadCapturePointBravo
+  name: Точка Браво
+  components:
+  - type: SquadCapturePoint
+    pointName: "Точка Браво"
+
+- type: entity
+  parent: SquadCapturePointBase
+  id: SquadCapturePointCharlie
+  name: Точка Чарли
+  components:
+  - type: SquadCapturePoint
+    pointName: "Точка Чарли"
+
+- type: entity
+  id: SquadHqObjectiveBase
+  parent: BaseStructure
+  name: командный узел штаба
+  description: Главный сервер управления и связи. Уничтожение этого узла означает поражение стороны.
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: Structures/Machines/server.rsi
+    state: server
+  - type: SquadHqObjective
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.45,-0.45,0.45,0.45"
+        density: 1000
+        mask:
+          - MachineMask
+        layer:
+          - MachineLayer
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Metallic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 1000
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:ExplodeBehavior
+  - type: Explosive
+    explosionType: Default
+    totalIntensity: 150
+    intensitySlope: 5
+    maxIntensity: 30
+
+- type: entity
+  parent: SquadHqObjectiveBase
+  id: SquadHqRed
+  name: командный узел Красных
+  components:
+  - type: SquadHqObjective
+    team: Red
+  - type: PointLight
+    radius: 4
+    color: "#FF3333"
+
+- type: entity
+  parent: SquadHqObjectiveBase
+  id: SquadHqBlue
+  name: командный узел Синих
+  components:
+  - type: SquadHqObjective
+    team: Blue
+  - type: PointLight
+    radius: 4
+    color: "#3388FF"
+
+- type: entity
+  parent: [ClothingOuterCoatHoSTrench, AllowSuitStorageClothing]
+  id: SquadLeaderRedCoat
+  components:
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.5
+        Heat: 0.9
+  - type: ExplosionResistance
+    damageCoefficient: 0.9
