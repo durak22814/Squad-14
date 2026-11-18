@@ -46,7 +46,7 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 600
+        damage: 250
       behaviors:
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
@@ -55,7 +55,7 @@
           collection: MetalGlassBreak
     - trigger:
         !type:DamageTrigger
-        damage: 300
+        damage: 120
        # TODO: Construction graph
       behaviors:
       - !type:DoActsBehavior

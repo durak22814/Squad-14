@@ -1,4 +1,4 @@
-- type: job
+﻿- type: job
   id: RedTeamLeader
   name: job-name-red-team-leader
   description: job-description-red-team-leader
@@ -10,6 +10,7 @@
   icon: "JobIconSecurityOfficer"
   supervisors: job-supervisors-squad-leader
   canBeAntag: false
+  weight: 5
 
 - type: startingGear
   id: RedTeamLeaderGear

@@ -3,20 +3,6 @@
   id: SquadSapperSpade
 
 - type: entity
-  id: SquadFpvController
-  parent: BaseItem
-  name: пульт управления FPV
-  description: Тактический пульт оператора БПЛА. Нажмите Z в руке для подключения к дрону; повторное нажатие Z — подрыв.
-  components:
-  - type: Sprite
-    sprite: Objects/Devices/signaller.rsi
-    state: signaller
-  - type: Item
-    size: Small
-  - type: SquadFpvController
-    linkRadius: 15
-
-- type: entity
   id: ActionFpvDisconnect
   name: Отключиться от дрона
   description: Вернуть управление и камеру обратно оператору.
@@ -37,74 +23,6 @@
     checkCanInteract: false
     icon: Objects/Weapons/Grenades/grenade.rsi/icon.png
     event: !type:FpvDetonateActionEvent
-
-- type: entity
-  id: SquadFpvDrone
-  name: FPV-дрон камикадзе
-  description: Высокоскоростной ударный квадрокоптер с кумулятивно-осколочным зарядом.
-  components:
-  - type: Sprite
-    sprite: Mobs/Silicon/drone.rsi
-    state: shell
-    noRot: true
-  - type: Eye
-    drawFov: true
-  - type: InputMover
-  - type: Clickable
-  - type: InteractionOutline
-  - type: Physics
-    bodyType: Dynamic
-    fixedRotation: true
-  - type: Fixtures
-    fixtures:
-      fix1:
-        shape:
-          !type:PhysShapeCircle
-          radius: 0.2
-        density: 15
-        mask:
-          - Impassable
-          - HighImpassable
-          - MidImpassable
-          - MobMask
-        layer:
-          - MobLayer
-        hard: true
-  - type: MovementSpeedModifier
-    baseWalkSpeed: 7.5
-    baseSprintSpeed: 12.0
-    baseAcceleration: 15
-  - type: PointLight
-    radius: 3.5
-    energy: 2.0
-    color: "#FF3333"
-  - type: AmbientSound
-    volume: 2
-    range: 14
-    enabled: false
-    sound:
-      path: /Audio/Effects/fpv.ogg
-  - type: SquadFpvDrone
-    maxRange: 65
-    detonateOnCollide: true
-    explosionIntensity: 35
-    explosionSlope: 3
-    explosionMaxIntensity: 4
-  - type: Pullable
-  - type: Damageable
-    damageContainer: Inorganic
-    damageModifierSet: Metallic
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 15
-      behaviors:
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MetalBreak
 
 - type: entity
   parent: [ClothingOuterCoatWarden, AllowSuitStorageClothing]
@@ -850,3 +768,553 @@
         Heat: 0.9
   - type: ExplosionResistance
     damageCoefficient: 0.9
+
+- type: entity
+  id: SquadPrepBarrier
+  name: барьер этапа подготовки
+  description: Временное тактическое заграждение. Исчезнет через 2:30 после старта раунда.
+  components:
+  - type: Sprite
+    sprite: Structures/Holo/field.rsi
+    state: icon
+    color: "#FFAA00"
+  - type: PointLight
+    radius: 2.5
+    energy: 1.5
+    color: "#FFAA00"
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.5,-0.5,0.5,0.5"
+        density: 1000
+        mask:
+          - Impassable
+          - HighImpassable
+          - MidImpassable
+          - MobMask
+        layer:
+          - WallLayer
+        hard: true
+  - type: SquadPrepBarrier
+
+- type: entity
+  id: ActionSquadGiveUp
+  name: Принять смерть
+  description: Прекратить борьбу за жизнь, не дожидаясь медика.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    checkCanInteract: false
+    checkConsciousness: false
+    icon: Interface/VerbIcons/die.svg.192dpi.png
+  - type: InstantAction
+    event: !type:SquadGiveUpActionEvent
+
+- type: npcFaction
+  id: SquadFpvDroneRedFaction
+  hostile: []
+
+- type: npcFaction
+  id: SquadFpvDroneBlueFaction
+  hostile: []
+
+- type: npcFaction
+  id: SquadAntiDroneRedFaction
+  hostile:
+    - SquadFpvDroneBlueFaction
+
+- type: npcFaction
+  id: SquadAntiDroneBlueFaction
+  hostile:
+    - SquadFpvDroneRedFaction
+
+- type: entity
+  parent: SquadFpvDrone
+  id: SquadFpvDroneRed
+  name: FPV-дрон Красных
+  components:
+  - type: NpcFactionMember
+    factions:
+      - SquadFpvDroneRedFaction
+  - type: SquadFpvDrone
+    team: Red
+
+- type: entity
+  parent: SquadFpvDrone
+  id: SquadFpvDroneBlue
+  name: FPV-дрон Синих
+  components:
+  - type: NpcFactionMember
+    factions:
+      - SquadFpvDroneBlueFaction
+  - type: SquadFpvDrone
+    team: Blue
+
+- type: entity
+  parent: SquadFpvDroneHeavy
+  id: SquadFpvDroneHeavyRed
+  name: тяжёлый FPV-дрон Красных
+  components:
+  - type: NpcFactionMember
+    factions:
+      - SquadFpvDroneRedFaction
+  - type: SquadFpvDrone
+    team: Red
+
+- type: entity
+  parent: SquadFpvDroneHeavy
+  id: SquadFpvDroneHeavyBlue
+  name: тяжёлый FPV-дрон Синих
+  components:
+  - type: Sprite
+    sprite: Mobs/Silicon/drone.rsi
+    state: shell
+    color: "#FF8800"
+    noRot: true
+  - type: NpcFactionMember
+    factions:
+      - SquadFpvDroneBlueFaction
+  - type: SquadFpvDrone
+    team: Blue
+
+
+- type: entity
+  parent: CrateWooden
+  id: CrateSquadFpvDronesRed
+  name: ящик с FPV-дронами Красных (3 шт.)
+  description: Контейнер с тремя лёгкими противопехотными FPV-дронами Красных.
+  components:
+  - type: StorageFill
+    contents:
+      - id: SquadFpvDroneRed
+        amount: 3
+
+- type: entity
+  parent: CrateWooden
+  id: CrateSquadFpvDronesBlue
+  name: ящик с FPV-дронами Синих (3 шт.)
+  description: Контейнер с тремя лёгкими противопехотными FPV-дронами Синих.
+  components:
+  - type: StorageFill
+    contents:
+      - id: SquadFpvDroneBlue
+        amount: 3
+
+- type: entity
+  parent: CrateWooden
+  id: CrateSquadFpvDroneHeavyRed
+  name: ящик с тяжёлыми FPV-дронами Красных (2 шт.)
+  description: Контейнер с двумя тяжёлыми бронебойными FPV-дронами Красных.
+  components:
+  - type: StorageFill
+    contents:
+      - id: SquadFpvDroneHeavyRed
+        amount: 2
+
+- type: entity
+  parent: CrateWooden
+  id: CrateSquadFpvDroneHeavyBlue
+  name: ящик с тяжёлыми FPV-дронами Синих (2 шт.)
+  description: Контейнер с двумя тяжёлыми бронебойными FPV-дронами Синих.
+  components:
+  - type: StorageFill
+    contents:
+      - id: SquadFpvDroneHeavyBlue
+        amount: 2
+
+- type: entity
+  parent: BaseWeaponBallisticTurret
+  id: SquadAntiDroneTurretRed
+  name: автоматическая турель ПВО (Красных)
+  description: Зенитная установка ПВО. Сбивает только FPV-дроны Синих.
+  components:
+  - type: HTN
+    rootTask:
+      task: TurretCompound
+    blackboard:
+      VisionRadius: !type:Single
+        20.0
+      RangedRange: !type:Single
+        20.0
+      RotateSpeed: !type:Single
+        2.5
+      SoundTargetInLOS: !type:SoundPathSpecifier
+        path: /Audio/Effects/double_beep.ogg
+  - type: Sprite
+    color: "#FF5555"
+  - type: NpcFactionMember
+    factions:
+      - SquadAntiDroneRedFaction
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Wood
+  - type: Gun
+    fireRate: 5
+    selectedMode: FullAuto
+    availableModes:
+    - FullAuto
+    soundGunshot: /Audio/Weapons/Guns/Gunshots/gun_sentry.ogg
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 120
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: Transform
+    anchored: false
+  - type: Anchorable
+    delay: 1.5
+  - type: Pullable
+
+
+- type: entity
+  parent: BaseWeaponBallisticTurret
+  id: SquadAntiDroneTurretBlue
+  name: автоматическая турель ПВО (Синих)
+  description: Зенитная установка ПВО. Сбивает только FPV-дроны Красных.
+  components:
+  - type: HTN
+    rootTask:
+      task: TurretCompound
+    blackboard:
+      VisionRadius: !type:Single
+        20.0
+      RangedRange: !type:Single
+        20.0
+      RotateSpeed: !type:Single
+        2.5
+      SoundTargetInLOS: !type:SoundPathSpecifier
+        path: /Audio/Effects/double_beep.ogg
+  - type: Sprite
+    color: "#55AAFF"
+  - type: NpcFactionMember
+    factions:
+      - SquadAntiDroneBlueFaction 
+  - type: Gun
+    fireRate: 5
+    selectedMode: FullAuto
+    availableModes:
+    - FullAuto
+    soundGunshot: /Audio/Weapons/Guns/Gunshots/gun_sentry.ogg
+  - type: Transform
+    anchored: false
+  - type: Anchorable
+    delay: 1.5
+  - type: Pullable
+
+
+- type: listing
+  id: ListingSquadFpvControllerRed
+  name: пульт управления FPV
+  description: Тактический пульт оператора БПЛА для подключения к дронам.
+  productEntity: SquadFpvControllerRed
+  cost:
+    SquadSupplyRed: 5
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadFpvControllerBlue
+  name: пульт управления FPV
+  description: Тактический пульт оператора БПЛА для подключения к дронам.
+  productEntity: SquadFpvControllerBlue
+  cost:
+    SquadSupplyBlue: 5
+  categories:
+    - SquadSuppliesBlue
+
+- type: listing
+  id: ListingSquadFpvDronesBoxRed
+  name: ящик с FPV-дронами (3 шт.)
+  description: Контейнер с тремя лёгкими противопехотными FPV-дронами.
+  productEntity: CrateSquadFpvDronesRed
+  cost:
+    SquadSupplyRed: 10
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadFpvDronesBoxBlue
+  name: ящик с FPV-дронами (3 шт.)
+  description: Контейнер с тремя лёгкими противопехотными FPV-дронами.
+  productEntity: CrateSquadFpvDronesBlue
+  cost:
+    SquadSupplyBlue: 10
+  categories:
+    - SquadSuppliesBlue
+
+- type: listing
+  id: ListingSquadFpvDroneHeavyBoxRed
+  name: ящик с тяжёлыми FPV-дронами (2 шт.)
+  description: Контейнер с двумя ударными дронами против техники, укреплений и штаба.
+  productEntity: CrateSquadFpvDroneHeavyRed
+  cost:
+    SquadSupplyRed: 25
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadFpvDroneHeavyBoxBlue
+  name: ящик с тяжёлыми FPV-дронами (2 шт.)
+  description: Контейнер с двумя ударными дронами против техники, укреплений и штаба.
+  productEntity: CrateSquadFpvDroneHeavyBlue
+  cost:
+    SquadSupplyBlue: 25
+  categories:
+    - SquadSuppliesBlue
+
+- type: listing
+  id: ListingSquadAntiDroneTurretRed
+  name: автоматическая турель ПВО (против БПЛА)
+  description: Баллистическая турель ПВО, настроенная на перехват вражеских FPV-дронов.
+  productEntity: SquadAntiDroneTurretRed
+  cost:
+    SquadSupplyRed: 30
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadAntiDroneTurretBlue
+  name: автоматическая турель ПВО (против БПЛА)
+  description: Баллистическая турель ПВО, настроенная на перехват вражеских FPV-дронов.
+  productEntity: SquadAntiDroneTurretBlue
+  cost:
+    SquadSupplyBlue: 30
+  categories:
+    - SquadSuppliesBlue
+
+- type: entity
+  parent: PowerCellMedium
+  id: SquadInfinitePowerCell
+  name: вечный элемент питания
+  suffix: Бесконечный
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Battery
+    maxCharge: 1000
+    startingCharge: 1000
+  - type: BatterySelfRecharger
+    autoRecharge: true
+    autoRechargeRate: 100
+
+- type: entity
+  id: SquadFpvDrone
+  name: FPV-дрон камикадзе
+  description: Высокоскоростной ударный квадрокоптер с осколочно-фугасным зарядом.
+  components:
+  - type: Sprite
+    sprite: Mobs/Silicon/drone.rsi
+    state: shell
+    noRot: true
+  - type: Item
+    size: Normal
+  - type: Eye
+    drawFov: true
+  - type: InputMover
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Physics
+    bodyType: Dynamic
+    fixedRotation: true
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.2
+        density: 15
+        mask:
+          - Impassable
+          - HighImpassable
+          - MidImpassable
+          - MobMask
+        layer:
+          - MobLayer
+        hard: true
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 7.5
+    baseSprintSpeed: 12.0
+    baseAcceleration: 15
+  - type: PointLight
+    radius: 3.5
+    energy: 2.0
+    color: "#FF3333"
+  - type: AmbientSound
+    volume: 2
+    range: 14
+    enabled: false
+    sound:
+      path: /Audio/Effects/fpv.ogg
+  - type: SquadFpvDrone
+    maxRange: 65
+    detonateOnCollide: true
+    structuralDamage: 0
+    explosionIntensity: 35
+    explosionSlope: 3
+    explosionMaxIntensity: 4
+  - type: Pullable
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Metallic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 15
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+
+- type: entity
+  parent: SquadFpvDrone
+  id: SquadFpvDroneHeavy
+  name: тяжёлый ударный FPV-дрон
+  description: Усиленный квадрокоптер с тандемным кумулятивным зарядом против техники, укреплений и штаба.
+  components:
+  - type: Sprite
+    sprite: Mobs/Silicon/drone.rsi
+    state: shell
+    color: "#FF8800"
+    noRot: true
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 6.5
+    baseSprintSpeed: 9.5
+    baseAcceleration: 12
+  - type: PointLight
+    radius: 4.5
+    energy: 2.5
+    color: "#FF8800"
+  - type: SquadFpvDrone
+    maxRange: 75
+    detonateOnCollide: true
+    structuralDamage: 350
+    explosionIntensity: 140
+    explosionSlope: 2.5
+    explosionMaxIntensity: 16
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 40
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+
+- type: entity
+  id: SquadFpvController
+  parent: BaseItem
+  name: пульт управления FPV
+  description: Тактический пульт оператора БПЛА. Нажмите Z в руке для подключения к дрону; повторное нажатие Z — подрыв.
+  components:
+  - type: Sprite
+    sprite: Objects/Devices/signaller.rsi
+    state: signaller
+  - type: Item
+    size: Small
+  - type: SquadFpvController
+    linkRadius: 15
+
+- type: entity
+  parent: SquadFpvController
+  id: SquadFpvControllerRed
+  name: пульт управления FPV (Красных)
+  components:
+  - type: SquadFpvController
+    linkRadius: 15
+    team: Red
+
+- type: entity
+  parent: SquadFpvController
+  id: SquadFpvControllerBlue
+  name: пульт управления FPV (Синих)
+  components:
+  - type: SquadFpvController
+    linkRadius: 15
+    team: Blue
+
+- type: entity
+  parent: FlashlightSeclite
+  id: SquadFlashlightSecliteInfinite
+  name: тактический фонарь СБ
+  description: Надёжный тактический фонарь с интегрированным вечным элементом питания.
+  suffix: Бесконечный
+  components:
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        startingItem: SquadInfinitePowerCell
+        locked: true
+
+- type: gamePreset
+  id: SquadFrontlinePreset
+  alias:
+    - squad
+    - frontline
+  name: Фронт (Squad-14)
+  showInVote: true
+  description: Командное тактическое противостояние за контроль над точками и уничтожение вражеского штаба.
+  rules:
+    - SquadFrontlineRule
+
+- type: entity
+  id: SpawnSquadSupplyTruckBlue
+  name: спавнер грузовика снабжения синих
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: Objects/Vehicles/vehicle.rsi
+        state: security_officer
+  - type: ConditionalSpawner
+    prototypes:
+      - SquadSupplyTruckBlue
+
+- type: entity
+  id: SpawnSquadSupplyTruckRed
+  name: спавнер грузовика снабжения красных
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: Objects/Vehicles/vehicle.rsi
+        state: security_officer
+  - type: ConditionalSpawner
+    prototypes:
+      - SquadSupplyTruckRed
+
+- type: listing
+  id: ListingSquadSupplyTruckRed
+  name: грузовик снабжения (Красных)
+  description: Военный грузовой транспорт с вместительным кузовом для перевозки ящиков, ПВО-турелей и личного состава.
+  productEntity: SquadSupplyTruckRed
+  cost:
+    SquadSupplyRed: 35
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadSupplyTruckBlue
+  name: грузовик снабжения (Синих)
+  description: Военный грузовой транспорт с вместительным кузовом для перевозки ящиков, ПВО-турелей и личного состава.
+  productEntity: SquadSupplyBlue
+  cost:
+    SquadSupplyBlue: 35
+  categories:
+    - SquadSuppliesBlue

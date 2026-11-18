@@ -1,4 +1,4 @@
-- type: job
+﻿- type: job
   id: RedSoldier
   name: job-name-red-soldier
   description: job-description-red-soldier
@@ -7,6 +7,17 @@
   icon: "JobIconSecurityOfficer"
   supervisors: job-supervisors-squad-leader
   canBeAntag: false
+  requirements:
+      - !type:SpeciesRequirement
+       species:
+        - Human
+        - Moth
+        - Reptilian
+        - IPC
+        - Dwarf
+        - Felinid
+        - Vulpkanin
+        - Harpy
 
 - type: startingGear
   id: RedSoldierGear
@@ -22,6 +33,7 @@
     belt: ClothingBeltMercWebbing
     back: ClothingBackpackMerc
     pocket1: RadioHandheldSecurity
+    pocket2: SquadFlashlightSecliteInfinite
     suitstorage: WeaponRifleAk
   storage:
     belt:
@@ -31,3 +43,4 @@
     back:
     - BoxMRE
     - Gauze
+    - Binoculars

@@ -12,6 +12,7 @@ using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Roles.Jobs;
 using Content.Shared.Squad14;
+using Content.Shared.Tag;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio.Systems;
 
@@ -21,6 +22,7 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
 {
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
+    [Dependency] private readonly TagSystem _tag = default!;
     [Dependency] private readonly MindSystem _mind = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedJobSystem _jobs = default!;
@@ -41,6 +43,29 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
         SubscribeLocalEvent<SquadHqObjectiveComponent, DestructionEventArgs>(OnHqDestroyed);
     }
 
+        protected override void Started(EntityUid uid, SquadFrontlineRuleComponent component, GameRuleComponent gameRule, GameRuleStartedEvent args)
+    {
+        base.Started(uid, component, gameRule, args);
+
+        component.PreparationRemaining = component.PreparationTime;
+        component.IsPreparationActive = component.PreparationTime > 0f;
+        component.OneMinuteAnnounced = false;
+        component.ThirtySecondsAnnounced = false;
+
+        if (component.IsPreparationActive)
+        {
+            _chatSystem.DispatchGlobalAnnouncement(
+                $"Этап подготовки начался! У команд есть {FormatTime(component.PreparationRemaining)} на развёртывание и укрепление позиций.",
+                "Командование",
+                colorOverride: Color.Gold);
+        }
+        else
+        {
+            RemovePrepBarriers();
+        }
+    }
+
+
     protected override void AppendRoundEndText(EntityUid uid, SquadFrontlineRuleComponent component, GameRuleComponent gameRule, ref RoundEndTextAppendEvent args)
     {
         base.AppendRoundEndText(uid, component, gameRule, ref args);
@@ -55,7 +80,6 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
         args.AddLine(winnerText);
     }
 
-
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
@@ -67,10 +91,12 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
         var dt = _accumulator;
         _accumulator = 0f;
 
+        if (UpdatePreparationTimer(dt))
+            return;
+
         ProcessCapturePoints(dt);
         UpdateHqVulnerability();
     }
-
     private void ProcessCapturePoints(float dt)
     {
         var query = EntityQueryEnumerator<SquadCapturePointComponent, TransformComponent>();
@@ -139,7 +165,6 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
         }
     }
 
-
     private void UpdateHqVulnerability()
     {
         var totalPoints = 0;
@@ -178,8 +203,7 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
                 _chatSystem.DispatchGlobalAnnouncement($"ВНИМАНИЕ! Все точки захвачены - защита штаба {teamName} отключена! Уничтожьте командный узел!", "Штаб", colorOverride: Color.OrangeRed);
             }
         }
-    }
-
+    }    
     private SquadTeam GetEntityTeam(EntityUid uid)
     {
         if (_mind.TryGetMind(uid, out var mindId, out _) && _jobs.MindTryGetJobId(mindId, out var jobId) && jobId != null)
@@ -232,6 +256,7 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
     private void OnHqDestroyed(Entity<SquadHqObjectiveComponent> ent, ref DestructionEventArgs args)
     {
         var winner = ent.Comp.Team == SquadTeam.Red ? SquadTeam.Blue : SquadTeam.Red;
+        var winnerSaved = false;
 
         var ruleQuery = EntityQueryEnumerator<SquadFrontlineRuleComponent>();
         while (ruleQuery.MoveNext(out _, out var rule))
@@ -240,13 +265,75 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
                 return;
 
             rule.Winner = winner;
+            winnerSaved = true;
         }
+
+        if (!winnerSaved && _roundEnd.IsRoundEndRequested())
+            return;
 
         var winText = winner == SquadTeam.Red
             ? "Команда Красных уничтожила вражеский штаб и одержала победу!"
             : "Команда Синих уничтожила вражеский штаб и одержала победу!";
         _chatSystem.DispatchGlobalAnnouncement(winText, "Командование", colorOverride: Color.Gold);
+        _roundEnd.EndRound();
+    }
 
+    private bool UpdatePreparationTimer(float dt)
+    {
+        var active = false;
+        var query = EntityQueryEnumerator<SquadFrontlineRuleComponent>();
+                while (query.MoveNext(out _, out var rule))
+        {
+            if (!rule.IsPreparationActive)
+                continue;
+
+            rule.PreparationRemaining = Math.Max(0f, rule.PreparationRemaining - dt);
+
+            if (rule.PreparationRemaining <= 60f && !rule.OneMinuteAnnounced && rule.PreparationRemaining > 30f)
+            {
+                rule.OneMinuteAnnounced = true;
+                _chatSystem.DispatchGlobalAnnouncement("До окончания подготовки осталась 1 минута!", "Командование", colorOverride: Color.Yellow);
+            }
+            else if (rule.PreparationRemaining <= 30f && !rule.ThirtySecondsAnnounced && rule.PreparationRemaining > 0f)
+            {
+                rule.ThirtySecondsAnnounced = true;
+                _chatSystem.DispatchGlobalAnnouncement("До начала боя осталось 30 секунд!", "Командование", colorOverride: Color.Orange);
+            }
+
+            if (rule.PreparationRemaining <= 0f)
+            {
+                rule.IsPreparationActive = false;
+                _chatSystem.DispatchGlobalAnnouncement("Этап подготовки завершён! Барьеры сняты, контрольные точки открыты!", "Командование", colorOverride: Color.LimeGreen);
+
+                var barrierQuery = EntityQueryEnumerator<SquadPrepBarrierComponent>();
+                while (barrierQuery.MoveNext(out var barrierUid, out _))
+                {
+                    QueueDel(barrierUid);
+                }
+            }
+            else
+            {
+                active = true;
+            }
+        }
+
+        return active;
+    }
+
+
+        private void RemovePrepBarriers()
+    {
+        var tagQuery = EntityQueryEnumerator<TagComponent>();
+        while (tagQuery.MoveNext(out var barrierUid, out _))
+        {
+            if (_tag.HasTag(barrierUid, "SquadPrepBarrier"))
+                QueueDel(barrierUid);
+        }
+    }
+
+    private static string FormatTime(float seconds)
+    {
+        var ts = TimeSpan.FromSeconds(Math.Ceiling(seconds));
+        return $"{(int)ts.TotalMinutes:D2}:{ts.Seconds:D2}";
     }
 }
-

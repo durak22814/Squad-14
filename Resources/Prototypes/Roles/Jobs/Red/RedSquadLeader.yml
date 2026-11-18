@@ -1,4 +1,4 @@
-- type: job
+﻿- type: job
   id: RedSquadLeader
   name: job-name-red-squad-leader
   description: job-description-red-squad-leader
@@ -6,6 +6,17 @@
   requirements:
       - !type:OverallPlaytimeRequirement
        time: 20h
+      - !type:SpeciesRequirement
+       species:
+        - Human
+        - Moth
+        - Reptilian
+        - IPC
+        - Dwarf
+        - Felinid
+        - Vulpkanin
+        - Harpy
+  weight: 4
   startingGear: RedSquadLeaderGear
   icon: "JobIconSeniorOfficer"
   supervisors: job-supervisors-team-leader
@@ -26,7 +37,9 @@
     belt: ClothingBeltSquadLeaderFilled
     back: ClothingBackpackMerc
     suitstorage: WeaponRifleAk
+    pocket1: SquadFlashlightSecliteInfinite
   storage:
     back:
     - BoxMRE
     - Gauze
+    - Binoculars

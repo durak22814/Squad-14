@@ -1,4 +1,4 @@
-- type: job
+﻿- type: job
   id: RedSapper
   name: job-name-red-sapper
   description: job-description-red-sapper
@@ -6,6 +6,17 @@
   requirements:
     - !type:OverallPlaytimeRequirement
       time: 3h
+    - !type:SpeciesRequirement
+      species:
+        - Human
+        - Moth
+        - Reptilian
+        - IPC
+        - Dwarf
+        - Felinid
+        - Vulpkanin
+        - Harpy
+  weight: 3
   startingGear: RedSapperGear
   icon: "JobIconStationEngineer"
   supervisors: job-supervisors-squad-leader
@@ -15,6 +26,7 @@
   id: RedSapperGear
   equipment:
     head: RedSapperHardHat
+    ears: SquadHeadsetRed
     mask: ClothingMaskBandMerc
     neck: ClothingNeckTieRed
     outerClothing: ClothingOuterVestWebMerc
@@ -24,7 +36,7 @@
     shoes: ClothingShoesBootsMerc
     belt: ClothingBeltUtilityEngineering
     back: ClothingBackpackDuffelMilitary
-    pocket1: RadioHandheldSecurity
+    pocket1: SquadFlashlightSecliteInfinite
     suitstorage: WeaponRifleAk
   storage:
     back:
@@ -38,3 +50,4 @@
     - SheetGlass
     - SheetPlastic
     - PartRodMetal
+    - Binoculars

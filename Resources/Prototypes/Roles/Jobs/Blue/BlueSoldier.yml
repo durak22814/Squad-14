@@ -1,4 +1,4 @@
-- type: job
+﻿- type: job
   id: BlueSoldier
   name: job-name-blue-soldier
   description: job-description-blue-soldier
@@ -7,6 +7,17 @@
   icon: "JobIconHeadOfSecurity"
   supervisors: job-supervisors-squad-leader
   canBeAntag: false
+  requirements:
+    - !type:SpeciesRequirement
+      species:
+        - Human
+        - Moth
+        - Reptilian
+        - IPC
+        - Dwarf
+        - Felinid
+        - Vulpkanin
+        - Harpy
 
 - type: startingGear
   id: BlueSoldierGear
@@ -21,8 +32,10 @@
     belt: ClothingBeltSquadSoldierFilled
     back: ClothingBackpackMerc
     pocket1: RadioHandheld
+    pocket2: SquadFlashlightSecliteInfinite
     suitstorage: WeaponRifleAk
   storage:
     back:
     - BoxMRE
     - Gauze
+    - Binoculars

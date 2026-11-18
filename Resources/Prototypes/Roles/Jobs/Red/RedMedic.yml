@@ -1,4 +1,4 @@
-- type: job
+﻿- type: job
   id: RedMedic
   name: job-name-red-Medic
   description: job-description-red-Medic
@@ -6,6 +6,17 @@
   requirements:
     - !type:OverallPlaytimeRequirement
       time: 5h
+    - !type:SpeciesRequirement
+      species:
+        - Human
+        - Moth
+        - Reptilian
+        - IPC
+        - Dwarf
+        - Felinid
+        - Vulpkanin
+        - Harpy
+      
   startingGear: RedMedicGear
   icon: "JobIconBrigmedic"
   supervisors: job-supervisors-squad-leader
@@ -27,6 +38,8 @@
     belt: ClothingBeltSquadSoldierFilled
     back: ClothingBackpackMerc
     suitstorage: WeaponRifleAk
+    pocket1: SquadFlashlightSecliteInfinite
   storage:
     back:
     - BoxMRE
+    - Binoculars

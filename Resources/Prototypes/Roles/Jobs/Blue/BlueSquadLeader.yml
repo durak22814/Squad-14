@@ -1,4 +1,4 @@
-- type: job
+﻿- type: job
   id: BlueSquadLeader
   name: job-name-blue-squad-leader
   description: job-description-blue-squad-leader
@@ -6,6 +6,17 @@
   requirements:
       - !type:OverallPlaytimeRequirement
        time: 20h
+      - !type:SpeciesRequirement
+       species:
+        - Human
+        - Moth
+        - Reptilian
+        - IPC
+        - Dwarf
+        - Felinid
+        - Vulpkanin
+        - Harpy
+  weight: 4
   startingGear: BlueSquadLeader
   icon: "JobIconSeniorPhysician"
   supervisors: job-supervisors-team-leader
@@ -25,7 +36,9 @@
     belt: ClothingBeltSquadLeaderFilled
     back: ClothingBackpackMerc
     suitstorage: WeaponRifleAk
+    pocket1: SquadFlashlightSecliteInfinite
   storage:
     back:
     - BoxMRE
     - Gauze
+    - Binoculars

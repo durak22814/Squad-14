@@ -171,6 +171,11 @@ public sealed class SquadFpvSystem : EntitySystem
         {
             if (drone.Comp.Operator != null)
                 continue;
+                
+            if (controller.Comp.Team != SquadTeam.Neutral
+                && drone.Comp.Team != SquadTeam.Neutral
+                && controller.Comp.Team != drone.Comp.Team)
+                continue;
 
             var dist = (_transform.GetWorldPosition(drone) - _transform.GetWorldPosition(user)).Length();
             if (dist < bestDist)
@@ -334,6 +339,26 @@ public sealed class SquadFpvSystem : EntitySystem
         foreach (var target in _lookup.GetEntitiesInRange<MobStateComponent>(coords, 2.2f))
         {
             _damageable.TryChangeDamage(target.Owner, shrapnelDamage, ignoreResistances: false);
+        }
+
+        if (drone.Comp.StructuralDamage > 0f)
+        {
+            var structDamage = new DamageSpecifier
+            {
+                DamageDict =
+                {
+                    ["Blunt"] = drone.Comp.StructuralDamage * 0.6f,
+                    ["Piercing"] = drone.Comp.StructuralDamage * 0.4f
+                }
+            };
+
+            foreach (var target in _lookup.GetEntitiesInRange<DamageableComponent>(coords, 2.2f))
+            {
+                if (HasComp<MobStateComponent>(target))
+                    continue;
+
+                _damageable.TryChangeDamage(target.Owner, structDamage, ignoreResistances: true);
+            }
         }
 
         _explosion.QueueExplosion(

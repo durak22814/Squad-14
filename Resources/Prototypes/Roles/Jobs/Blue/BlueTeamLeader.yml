@@ -1,4 +1,4 @@
-- type: job
+﻿- type: job
   id: BlueTeamLeader
   name: job-name-blue-team-leader
   description: job-description-blue-team-leader
@@ -7,6 +7,20 @@
   icon: "JobIconHeadOfSecurity"
   supervisors: job-supervisors-team-leader
   canBeAntag: false
+  requirements:
+    - !type:OverallPlaytimeRequirement
+      time: 50h
+    - !type:SpeciesRequirement
+      species:
+        - Human
+        - Moth
+        - Reptilian
+        - IPC
+        - Dwarf
+        - Felinid
+        - Vulpkanin
+        - Harpy
+  weight: 5
 
 - type: startingGear
   id: BlueTeamLeaderGear
@@ -22,7 +36,9 @@
     belt: ClothingBeltSquadTeamLeaderFilled
     back: ClothingBackpackMerc
     suitstorage: WeaponRifleAk
+    pocket1: SquadFlashlightSecliteInfinite
   storage:
     back:
     - BoxMRE
     - Gauze
+    - Binoculars

@@ -17,6 +17,9 @@ public sealed partial class SquadFpvDroneComponent : Component
 
     [DataField]
     public bool DetonateOnCollide = true;
+    
+    [DataField]
+    public float StructuralDamage = 0f;
 
     [DataField]
     public float ExplosionIntensity = 35f;
@@ -26,6 +29,10 @@ public sealed partial class SquadFpvDroneComponent : Component
 
     [DataField]
     public float ExplosionMaxIntensity = 4f;
+
+    [DataField]
+    public SquadTeam Team = SquadTeam.Neutral;
+
 }
 
 [RegisterComponent, NetworkedComponent]
@@ -33,6 +40,9 @@ public sealed partial class SquadFpvControllerComponent : Component
 {
     [DataField]
     public float LinkRadius = 15f;
+    
+    [DataField]
+    public SquadTeam Team = SquadTeam.Neutral;
 
     [ViewVariables]
     public EntityUid? LinkedDrone;
@@ -42,8 +52,15 @@ public sealed partial class SquadFpvControllerComponent : Component
 
     [ViewVariables]
     public EntityUid? DetonateAction;
+
+    
 }
 
 public sealed partial class FpvDisconnectActionEvent : InstantActionEvent;
 
 public sealed partial class FpvDetonateActionEvent : InstantActionEvent;
+
+public sealed partial class SquadGiveUpActionEvent : InstantActionEvent;
+
+[RegisterComponent]
+public sealed partial class SquadPrepBarrierComponent : Component;
