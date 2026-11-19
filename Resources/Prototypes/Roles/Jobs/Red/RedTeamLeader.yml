@@ -5,7 +5,18 @@
   playTimeTracker: JobRedTeamLeader
   requirements:
       - !type:OverallPlaytimeRequirement
-       time: 100h
+       time: 50h
+      - !type:SpeciesRequirement
+       species:
+        - Human
+        - Moth
+        - Reptilian
+        - IPC
+        - Dwarf
+        - Felinid
+        - Vulpkanin
+        - Harpy
+  weight: 5
   startingGear: RedTeamLeaderGear
   icon: "JobIconSecurityOfficer"
   supervisors: job-supervisors-squad-leader

@@ -30,15 +30,13 @@ public sealed partial class SquadCapturePointComponent : Component
     [DataField]
     public SoundSpecifier CapturedSound = new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg", new AudioParams { Volume = -3f });
 
-    /// <summary>
-    /// От -100 (Red) до +100 (Blue).
-    /// </summary>
-    [ViewVariables, AutoNetworkedField]
+    [DataField, ViewVariables, AutoNetworkedField]
     public float Progress = 0f;
 
-    [ViewVariables, AutoNetworkedField]
+    [DataField, ViewVariables, AutoNetworkedField]
     public SquadTeam OwnerTeam = SquadTeam.Neutral;
 }
+
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class SquadHqObjectiveComponent : Component

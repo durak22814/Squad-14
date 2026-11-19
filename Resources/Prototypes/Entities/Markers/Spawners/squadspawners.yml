@@ -119,3 +119,39 @@
     layers:
       - state: green
       - state: brigmedic
+
+- type: entity
+  id: SpawnSquadSupplyTruckRed
+  name: спавнер грузовика снабжения (Красных)
+  parent: MarkerBase
+  placement:
+    mode: PlaceFree
+  components:
+  - type: Transform
+    anchored: false
+  - type: Sprite
+    layers:
+      - state: red
+      - sprite: _RMC14/Structures/Vehicles/vehicles3.rsi
+        state: small_truck_red
+  - type: EntityTableSpawner
+    table: !type:EntSelector
+      id: SquadSupplyTruckRed
+
+- type: entity
+  id: SpawnSquadSupplyTruckBlue
+  name: спавнер грузовика снабжения (Синих)
+  parent: MarkerBase
+  placement:
+    mode: PlaceFree
+  components:
+  - type: Transform
+    anchored: false
+  - type: Sprite
+    layers:
+      - state: blue
+      - sprite: _RMC14/Structures/Vehicles/vehicles3.rsi
+        state: small_truck_blue
+  - type: EntityTableSpawner
+    table: !type:EntSelector
+      id: SquadSupplyTruckBlue

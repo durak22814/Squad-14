@@ -663,14 +663,17 @@
         layer:
           - MachineLayer
 
-
 - type: entity
   parent: SquadCapturePointBase
   id: SquadCapturePointAlpha
   name: Точка Альфа
   components:
+  - type: Sprite
+    color: "#3399FF"
   - type: SquadCapturePoint
     pointName: "Точка Альфа"
+    progress: 100
+    ownerTeam: Blue
 
 - type: entity
   parent: SquadCapturePointBase
@@ -685,8 +688,12 @@
   id: SquadCapturePointCharlie
   name: Точка Чарли
   components:
+  - type: Sprite
+    color: "#FF3333"
   - type: SquadCapturePoint
     pointName: "Точка Чарли"
+    progress: -100
+    ownerTeam: Red
 
 - type: entity
   id: SquadHqObjectiveBase
@@ -1271,34 +1278,6 @@
   rules:
     - SquadFrontlineRule
 
-- type: entity
-  id: SpawnSquadSupplyTruckBlue
-  name: спавнер грузовика снабжения синих
-  parent: MarkerBase
-  components:
-  - type: Sprite
-    layers:
-      - state: green
-      - sprite: Objects/Vehicles/vehicle.rsi
-        state: security_officer
-  - type: ConditionalSpawner
-    prototypes:
-      - SquadSupplyTruckBlue
-
-- type: entity
-  id: SpawnSquadSupplyTruckRed
-  name: спавнер грузовика снабжения красных
-  parent: MarkerBase
-  components:
-  - type: Sprite
-    layers:
-      - state: green
-      - sprite: Objects/Vehicles/vehicle.rsi
-        state: security_officer
-  - type: ConditionalSpawner
-    prototypes:
-      - SquadSupplyTruckRed
-
 - type: listing
   id: ListingSquadSupplyTruckRed
   name: грузовик снабжения (Красных)
@@ -1313,8 +1292,70 @@
   id: ListingSquadSupplyTruckBlue
   name: грузовик снабжения (Синих)
   description: Военный грузовой транспорт с вместительным кузовом для перевозки ящиков, ПВО-турелей и личного состава.
-  productEntity: SquadSupplyBlue
+  productEntity: SquadSupplyTruckBlue
   cost:
     SquadSupplyBlue: 35
+  categories:
+    - SquadSuppliesBlue
+
+- type: entity
+  parent: CrateWooden
+  id: SquadCrateC20r
+  name: ящик с пистолетами-пулемётами C-20r (3 шт.)
+  description: Оружейный контейнер с тремя пистолетами-пулемётами C-20r. Боеприпасы поставляются отдельно.
+  components:
+  - type: StorageFill
+    contents:
+      - id: WeaponSubMachineGunC20r
+        amount: 3
+
+- type: entity
+  parent: CrateWooden
+  id: SquadCrateMagazineC20r
+  name: ящик с магазинами C-20r (3 шт.)
+  description: Короб с тремя стандартными магазинами (.35 Auto) для C-20r.
+  components:
+  - type: StorageFill
+    contents:
+      - id: MagazinePistolSubMachineGun
+        amount: 3
+
+- type: listing
+  id: ListingSquadCrateC20rRed
+  name: ящик с C-20r (3 шт.)
+  description: Оружейный ящик с тремя пистолетами-пулемётами C-20r (без запасных магазинов).
+  productEntity: SquadCrateC20r
+  cost:
+    SquadSupplyRed: 30
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadCrateMagazineC20rRed
+  name: ящик с магазинами C-20r (3 шт.)
+  description: Контейнер с тремя магазинами (9mm Auto) для C-20r.
+  productEntity: SquadCrateMagazineC20r
+  cost:
+    SquadSupplyRed: 10
+  categories:
+    - SquadSuppliesRed
+
+- type: listing
+  id: ListingSquadCrateC20rBlue
+  name: ящик с C-20r (3 шт.)
+  description: Оружейный ящик с тремя пистолетами-пулемётами C-20r (без запасных магазинов).
+  productEntity: SquadCrateC20r
+  cost:
+    SquadSupplyBlue: 30
+  categories:
+    - SquadSuppliesBlue
+
+- type: listing
+  id: ListingSquadCrateMagazineC20rBlue
+  name: ящик с магазинами C-20r (3 шт.)
+  description: Контейнер с тремя магазинами (9mm Auto) для C-20r.
+  productEntity: SquadCrateMagazineC20r
+  cost:
+    SquadSupplyBlue: 10
   categories:
     - SquadSuppliesBlue

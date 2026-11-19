@@ -13,6 +13,8 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Roles.Jobs;
 using Content.Shared.Squad14;
 using Content.Shared.Tag;
+using Content.Server.Store.Systems;
+using Content.Shared.Store.Components;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio.Systems;
 
@@ -30,6 +32,9 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
     [Dependency] private readonly PointLightSystem _light = default!;
     [Dependency] private readonly ChatSystem _chatSystem = default!;
     [Dependency] private readonly RoundEndSystem _roundEnd = default!;
+    [Dependency] private readonly StoreSystem _store = default!;
+
+    private float _supplyAccumulator = 0f;
 
     private float _accumulator;
 
@@ -55,7 +60,7 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
         if (component.IsPreparationActive)
         {
             _chatSystem.DispatchGlobalAnnouncement(
-                $"Этап подготовки начался! У команд есть {FormatTime(component.PreparationRemaining)} на развёртывание и укрепление позиций.",
+                $"Этап подготовки начался. У команд есть {FormatTime(component.PreparationRemaining)} на развёртывание и укрепление позиций.",
                 "Командование",
                 colorOverride: Color.Gold);
         }
@@ -80,23 +85,24 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
         args.AddLine(winnerText);
     }
 
-    public override void Update(float frameTime)
-    {
-        base.Update(frameTime);
+public override void Update(float frameTime)
+{
+    base.Update(frameTime);
 
-        _accumulator += frameTime;
-        if (_accumulator < 1f)
-            return;
+    _accumulator += frameTime;
+    if (_accumulator < 1f)
+        return;
 
-        var dt = _accumulator;
-        _accumulator = 0f;
+    var dt = _accumulator;
+    _accumulator = 0f;
 
-        if (UpdatePreparationTimer(dt))
-            return;
+    if (UpdatePreparationTimer(dt))
+        return;
 
-        ProcessCapturePoints(dt);
-        UpdateHqVulnerability();
-    }
+    ProcessCapturePoints(dt);
+    UpdateHqVulnerability();
+    ProcessCapturePointSupply(dt);
+}
     private void ProcessCapturePoints(float dt)
     {
         var query = EntityQueryEnumerator<SquadCapturePointComponent, TransformComponent>();
@@ -167,6 +173,7 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
 
     private void UpdateHqVulnerability()
     {
+        
         var totalPoints = 0;
         var redPoints = 0;
         var bluePoints = 0;
@@ -200,7 +207,7 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
             if (shouldBeVulnerable)
             {
                 var teamName = hq.Team == SquadTeam.Red ? "Красных" : "Синих";
-                _chatSystem.DispatchGlobalAnnouncement($"ВНИМАНИЕ! Все точки захвачены - защита штаба {teamName} отключена! Уничтожьте командный узел!", "Штаб", colorOverride: Color.OrangeRed);
+                _chatSystem.DispatchGlobalAnnouncement($"Все точки захвачены. Уничтожьте штаб {teamName}", "Штаб", colorOverride: Color.OrangeRed);
             }
         }
     }    
@@ -242,7 +249,7 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
     private void OnHqExamined(Entity<SquadHqObjectiveComponent> ent, ref ExaminedEvent args)
     {
         if (ent.Comp.IsVulnerable)
-            args.PushMarkup("[color=red]ЗАЩИТА ОТКЛЮЧЕНА! Командный узел уязвим для атак![/color]");
+            args.PushMarkup("[color=red]Защита узла отключена![/color]");
         else
             args.PushMarkup("[color=green]Силовой щит активен. Захватите все контрольные точки, чтобы снять защиту.[/color]");
     }
@@ -272,8 +279,8 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
             return;
 
         var winText = winner == SquadTeam.Red
-            ? "Команда Красных уничтожила вражеский штаб и одержала победу!"
-            : "Команда Синих уничтожила вражеский штаб и одержала победу!";
+            ? "Команда Красных уничтожила вражеский узел и одержала победу"
+            : "Команда Синих уничтожила вражеский штаб и одержала победу";
         _chatSystem.DispatchGlobalAnnouncement(winText, "Командование", colorOverride: Color.Gold);
         _roundEnd.EndRound();
     }
@@ -289,21 +296,16 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
 
             rule.PreparationRemaining = Math.Max(0f, rule.PreparationRemaining - dt);
 
-            if (rule.PreparationRemaining <= 60f && !rule.OneMinuteAnnounced && rule.PreparationRemaining > 30f)
-            {
-                rule.OneMinuteAnnounced = true;
-                _chatSystem.DispatchGlobalAnnouncement("До окончания подготовки осталась 1 минута!", "Командование", colorOverride: Color.Yellow);
-            }
-            else if (rule.PreparationRemaining <= 30f && !rule.ThirtySecondsAnnounced && rule.PreparationRemaining > 0f)
+            if (rule.PreparationRemaining <= 30f && !rule.ThirtySecondsAnnounced && rule.PreparationRemaining > 0f)
             {
                 rule.ThirtySecondsAnnounced = true;
-                _chatSystem.DispatchGlobalAnnouncement("До начала боя осталось 30 секунд!", "Командование", colorOverride: Color.Orange);
+                _chatSystem.DispatchGlobalAnnouncement("До начала боя осталось 30 секунд.", "Командование", colorOverride: Color.Orange);
             }
 
             if (rule.PreparationRemaining <= 0f)
             {
                 rule.IsPreparationActive = false;
-                _chatSystem.DispatchGlobalAnnouncement("Этап подготовки завершён! Барьеры сняты, контрольные точки открыты!", "Командование", colorOverride: Color.LimeGreen);
+                _chatSystem.DispatchGlobalAnnouncement("Контрольные точки открыты", "Командование", colorOverride: Color.LimeGreen);
 
                 var barrierQuery = EntityQueryEnumerator<SquadPrepBarrierComponent>();
                 while (barrierQuery.MoveNext(out var barrierUid, out _))
@@ -335,5 +337,41 @@ public sealed class SquadFrontlineSystem : GameRuleSystem<SquadFrontlineRuleComp
     {
         var ts = TimeSpan.FromSeconds(Math.Ceiling(seconds));
         return $"{(int)ts.TotalMinutes:D2}:{ts.Seconds:D2}";
+    }
+    private void ProcessCapturePointSupply(float dt)
+    {
+        _supplyAccumulator += dt;
+        if (_supplyAccumulator < 30f)
+            return;
+
+        _supplyAccumulator = 0f;
+
+        var redPoints = 0;
+        var bluePoints = 0;
+
+        var pointQuery = EntityQueryEnumerator<SquadCapturePointComponent>();
+        while (pointQuery.MoveNext(out _, out var point))
+        {
+            if (point.OwnerTeam == SquadTeam.Red)
+                redPoints++;
+            else if (point.OwnerTeam == SquadTeam.Blue)
+                bluePoints++;
+        }
+
+        if (redPoints == 0 && bluePoints == 0)
+            return;
+
+        var storeQuery = EntityQueryEnumerator<StoreComponent>();
+        while (storeQuery.MoveNext(out var uid, out var store))
+        {
+            if (redPoints > 0 && store.CurrencyWhitelist.Contains("SquadSupplyRed"))
+            {
+                _store.TryAddCurrency(new() { { "SquadSupplyRed", redPoints * 2 } }, uid, store);
+            }
+            else if (bluePoints > 0 && store.CurrencyWhitelist.Contains("SquadSupplyBlue"))
+            {
+                _store.TryAddCurrency(new() { { "SquadSupplyBlue", bluePoints * 2 } }, uid, store);
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ using Content.Server.Chat.Managers;
 using Content.Shared.GameTicking;
 using Content.Server.Mind;
 using Content.Server.Roles;
+using Content.Server.Preferences.Managers;
 using Content.Server.Spawners.Components;
 using Content.Server.Spawners.EntitySystems;
 using Content.Server.Station.Components;
@@ -33,6 +34,7 @@ namespace Content.Server.Squad14
         [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
         [Dependency] private readonly IPlayerManager _playerManager = default!;
         [Dependency] private readonly IServerConsoleHost _consoleHost = default!;
+        [Dependency] private readonly IServerPreferencesManager _prefs = default!;
         [Dependency] private readonly MindSystem _mind = default!;
         [Dependency] private readonly RoleSystem _role = default!;
         [Dependency] private readonly StationSpawningSystem _spawning = default!;
@@ -214,7 +216,9 @@ namespace Content.Server.Squad14
                 return false;
 
             var chosenCoords = _random.Pick(spawnCoords);
-            var profile = HumanoidCharacterProfile.Random();
+
+            var profile = _prefs.GetPreferences(mind.UserId.Value).SelectedCharacter as HumanoidCharacterProfile
+                          ?? HumanoidCharacterProfile.Random();
 
             var newMob = _spawning.SpawnPlayerMob(
                 chosenCoords,
@@ -307,4 +311,3 @@ namespace Content.Server.Squad14
         }
     }
 }
-
