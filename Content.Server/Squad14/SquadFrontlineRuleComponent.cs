@@ -30,5 +30,3 @@ public sealed partial class SquadFrontlineRuleComponent : Component
     [ViewVariables]
     public bool BlueHqExposedAnnounced;
 }
-
-public sealed partial class SquadGiveUpActionEvent : InstantActionEvent;

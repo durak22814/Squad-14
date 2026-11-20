@@ -18,6 +18,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Containers;
 
 namespace Content.Server.Squad14;
 
@@ -25,6 +26,7 @@ public sealed class SquadFpvSystem : EntitySystem
 {
     [Dependency] private readonly SharedEyeSystem _eye = default!;
     [Dependency] private readonly SharedAudioSystem _sound = default!;
+    [Dependency] private readonly SharedContainerSystem _container = default!;
     [Dependency] private readonly IPlayerManager _playerManager = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly SharedMoverController _mover = default!;
@@ -48,6 +50,7 @@ public sealed class SquadFpvSystem : EntitySystem
 
         SubscribeLocalEvent<SquadFpvDroneComponent, StartCollideEvent>(OnDroneCollide);
         SubscribeLocalEvent<SquadFpvDroneComponent, DestructionEventArgs>(OnDroneDestroyed);
+        SubscribeLocalEvent<SquadFpvDroneComponent, EntGotInsertedIntoContainerMessage>(OnDroneInsertedIntoContainer);
 
         SubscribeLocalEvent<FpvDisconnectActionEvent>(OnDisconnectAction);
         SubscribeLocalEvent<FpvDetonateActionEvent>(OnDetonateAction);
@@ -171,7 +174,9 @@ public sealed class SquadFpvSystem : EntitySystem
         {
             if (drone.Comp.Operator != null)
                 continue;
-                
+            if (_container.IsEntityInContainer(drone))
+                continue;
+   
             if (controller.Comp.Team != SquadTeam.Neutral
                 && drone.Comp.Team != SquadTeam.Neutral
                 && controller.Comp.Team != drone.Comp.Team)
@@ -370,5 +375,11 @@ public sealed class SquadFpvSystem : EntitySystem
             canCreateVacuum: false);
 
         QueueDel(drone);
+    }
+
+    private void OnDroneInsertedIntoContainer(Entity<SquadFpvDroneComponent> drone, ref EntGotInsertedIntoContainerMessage args)
+    {
+        if (drone.Comp.Operator != null)
+            DisconnectDrone(drone);
     }
 }

@@ -115,6 +115,10 @@
   name: folding steel barricade
   description: A tough barricade built to keep the bad out. This one can be opened with a latch.
   components:
+  - type: Transform
+    anchored: false
+  - type: Item
+    size: Large
   - type: Damageable
     damageModifierSet: BarricadeSteelFolding
 

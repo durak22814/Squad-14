@@ -5,6 +5,7 @@ using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Squad14;
+using Content.Shared.Verbs;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server.Squad14;
@@ -25,6 +26,7 @@ public sealed class SquadGiveUpSystem : EntitySystem
 
         SubscribeLocalEvent<MobStateChangedEvent>(OnMobStateChanged);
         SubscribeLocalEvent<MobStateComponent, EntityTerminatingEvent>(OnMobTerminating);
+        SubscribeLocalEvent<MobStateComponent, GetVerbsEvent<AlternativeVerb>>(OnGetGiveUpVerb);
         SubscribeLocalEvent<SquadGiveUpActionEvent>(OnGiveUpAction);
     }
 
@@ -65,5 +67,18 @@ public sealed class SquadGiveUpSystem : EntitySystem
 
         _mobState.ChangeMobState(uid, MobState.Dead);
         args.Handled = true;
+    }
+
+    private void OnGetGiveUpVerb(Entity<MobStateComponent> ent, ref GetVerbsEvent<AlternativeVerb> args)
+    {
+        if (args.User != ent.Owner || !_mobState.IsCritical(ent.Owner))
+            return;
+
+        args.Verbs.Add(new AlternativeVerb
+        {
+            Text = "Принять смерть",
+             Priority = 100,
+            Act = () => _mobState.ChangeMobState(ent.Owner, MobState.Dead)
+        });
     }
 }

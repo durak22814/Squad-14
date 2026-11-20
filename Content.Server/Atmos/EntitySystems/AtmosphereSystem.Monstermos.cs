@@ -153,7 +153,8 @@ namespace Content.Server.Atmos.EntitySystems
                     {
                         var direction = (AtmosDirection) (1 << j);
                         if (!otherTile.AdjacentBits.IsFlagSet(direction)) continue;
-                        var tile2 = otherTile.AdjacentTiles[j]!;
+                        var tile2 = otherTile.AdjacentTiles[j];
+                        if (tile2 == null) continue;
                         DebugTools.Assert(tile2.AdjacentBits.IsFlagSet(direction.GetOpposite()));
 
                         // skip anything that isn't part of our current processing block.

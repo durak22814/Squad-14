@@ -809,17 +809,21 @@
   - type: SquadPrepBarrier
 
 - type: entity
+  parent: BaseAction
   id: ActionSquadGiveUp
   name: Принять смерть
-  description: Прекратить борьбу за жизнь, не дожидаясь медика.
-  categories: [ HideSpawnMenu ]
+  description: Немедленно прекратить борьбу за жизнь в критическом состоянии.
   components:
   - type: Action
     checkCanInteract: false
     checkConsciousness: false
-    icon: Interface/VerbIcons/die.svg.192dpi.png
+    icon:
+      sprite: Interface/Actions/actions_crit.rsi
+      state: fakedeath
   - type: InstantAction
     event: !type:SquadGiveUpActionEvent
+
+
 
 - type: npcFaction
   id: SquadFpvDroneRedFaction
